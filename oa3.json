@@ -90,16 +90,6 @@
                 "summary": "Notifications related to DK ECU provisioning",
                 "description": "Notify the status of the DK ECU provisioning for each step.",
                 "operationId": "createPairingPasswordNotification",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -142,26 +132,6 @@
                 "summary": "Event notification",
                 "description": "Event notification related to digital key creation or deletion.",
                 "operationId": "createOrTerminateEventNotification",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "maxLength": 17,
-                            "minLength": 0,
-                            "type": "string"
-                        }
-                    }
-                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -204,7 +174,7 @@
                 "summary": "UWB/BLE calibration",
                 "description": "API for UWB/BLE calibration",
                 "operationId": "calibration",
-				"parameters": [
+                "parameters": [
                     {
                         "name": "x-correlationId",
                         "in": "header",
@@ -220,6 +190,14 @@
                         "schema": {
                             "maxLength": 17,
                             "minLength": 0,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-guid",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
                             "type": "string"
                         }
                     }
@@ -237,66 +215,6 @@
                 "responses": {
                     "200": {
                         "description": "Token response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/digital-key/gen2/status": {
-            "get": {
-                "tags": [
-                    "digital-key-gen2"
-                ],
-                "summary": "Get key status",
-                "description": "Returns user current digital key status along with friend key details.",
-                "operationId": "keyInfo",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "x-guid",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "maxLength": 17,
-                            "minLength": 0,
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Token response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/KeyStatusResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request error when the request is malformed",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -374,16 +292,6 @@
                             "minLength": 0,
                             "type": "string"
                         }
-                    },
-                    {
-                        "name": "keyId",
-                        "in": "header",
-                        "required": false,
-                        "schema": {
-                            "maxLength": 60,
-                            "minLength": 0,
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -441,6 +349,66 @@
                     },
                     "400": {
                         "description": "Fetched the audit summary with error response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Status"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/digital-key/gen2/status": {
+            "get": {
+                "tags": [
+                    "digital-key-gen2"
+                ],
+                "summary": "Get key status",
+                "description": "Returns user current digital key status along with friend key details.",
+                "operationId": "keyInfo",
+                "parameters": [
+                    {
+                        "name": "x-correlationId",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-guid",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vin",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "maxLength": 17,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/KeyStatusResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request error when the request is malformed",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -577,7 +545,107 @@
                 ],
                 "summary": "Delete Digital Key",
                 "description": "Returns user digital key delete information.",
+                "operationId": "deleteKey_2",
+                "parameters": [
+                    {
+                        "name": "x-correlationId",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "x-guid",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vin",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "maxLength": 17,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/s2s/digital-key/gen2/keys/{keyId}": {
+            "delete": {
+                "tags": [
+                    "s2s-gen2"
+                ],
+                "summary": "Delete Digital Key",
+                "description": "Returns user digital key delete information.",
                 "operationId": "deleteKey_1",
+                "parameters": [
+                    {
+                        "name": "x-correlationId",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vin",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "maxLength": 17,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "keyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/digital-key/gen2/keys/{keyId}": {
+            "delete": {
+                "tags": [
+                    "digital-key-gen2"
+                ],
+                "summary": "Delete Digital Key",
+                "description": "Returns user digital key delete information.",
+                "operationId": "deleteKey_3",
                 "parameters": [
                     {
                         "name": "x-correlationId",
@@ -607,11 +675,9 @@
                     },
                     {
                         "name": "keyId",
-                        "in": "header",
-                        "required": false,
+                        "in": "path",
+                        "required": true,
                         "schema": {
-                            "maxLength": 60,
-                            "minLength": 0,
                             "type": "string"
                         }
                     }
@@ -772,6 +838,13 @@
             "EventNotificationRequest": {
                 "type": "object",
                 "properties": {
+                    "vin": {
+                        "maxLength": 17,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Incoming vehicle.",
+                        "example": "JTHBE1D21E5005002"
+                    },
                     "ecuId": {
                         "maxLength": 30,
                         "minLength": 0,
@@ -806,31 +879,6 @@
                         "type": "string"
                     },
                     "model": {
-                        "type": "string"
-                    }
-                }
-            },
-            "KeyStatusResponse": {
-                "type": "object",
-                "properties": {
-                    "pairingStatus": {
-                        "$ref": "#/components/schemas/Status"
-                    },
-                    "payload": {
-                        "$ref": "#/components/schemas/Payload"
-                    }
-                }
-            },
-            "Payload": {
-                "type": "object",
-                "properties": {
-                    "isCalibrated": {
-                        "type": "boolean"
-                    },
-                    "status": {
-                        "type": "string"
-                    },
-                    "sharedKeyCount": {
                         "type": "string"
                     }
                 }
@@ -887,6 +935,31 @@
                 "properties": {
                     "status": {
                         "$ref": "#/components/schemas/Status"
+                    }
+                }
+            },
+            "KeyStatusResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "payload": {
+                        "$ref": "#/components/schemas/Payload"
+                    }
+                }
+            },
+            "Payload": {
+                "type": "object",
+                "properties": {
+                    "isCalibrated": {
+                        "type": "boolean"
+                    },
+                    "pairingStatus": {
+                        "type": "string"
+                    },
+                    "sharedKeyCount": {
+                        "type": "string"
                     }
                 }
             },
