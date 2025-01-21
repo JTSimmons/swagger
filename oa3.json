@@ -1,2068 +1,2582 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-        "title": "Digital Key Gen2",
-        "description": "Set of APIs for orchestrating various digital key actions between T/L app, CTP services and TSC-DK",
-        "contact": {
-            "name": "Digital Key Team",
-            "email": "jesse.simmons@toyota.com"
-        },
-        "version": "1.0.0"
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Digital Key Gen2",
+    "description": "Set of APIs for orchestrating various digital key actions between T/L app, CTP services and TSC-DK",
+    "contact": {
+      "name": "Digital Key Team",
+      "email": "jesse.simmons@toyota.com"
     },
-    "servers": [
-        {
-            "url": "https://onedk.dev.telematicsct.com",
-            "description": "Server URL in Development environment"
-        }
-    ],
-    "tags": [
-        {
-            "name": "digital-key-gen2",
-            "description": "Digital Key APIs consumed by T/L App"
-        },
-        {
-            "name": "s2s-gen2",
-            "description": "Digital Key APIs consumed by other CTP services"
-        },
-        {
-            "name": "tsc-notification-gen2",
-            "description": "APIs related to TSC notification operations"
-        }
-    ],
-    "paths": {
-        "/v1/s2s/digital-key/gen2/owner/pairing-password/notification": {
-            "post": {
-                "tags": [
-                    "s2s-gen2"
-                ],
-                "summary": "Owner Pairing Password Email Notification",
-                "description": "Resending email Notification for the status of the owner-key pairing process from S2S to CTP.",
-                "operationId": "pairingPasswordNotification",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/digital-key/gen2/calibration": {
-            "post": {
-                "tags": [
-                    "digital-key-gen2"
-                ],
-                "summary": "UWB/BLE calibration",
-                "description": "API for UWB/BLE calibration",
-                "operationId": "calibration",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "x-guid",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CalibrationRequest"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/digital-key-gen2/ownerkey-registration/create-pairing-password-notification": {
-            "post": {
-                "tags": [
-                    "tsc-notification-gen2"
-                ],
-                "summary": "Notifications related to DK ECU provisioning",
-                "description": "Notify the status of the DK ECU provisioning for each step.",
-                "operationId": "createPairingPasswordNotification",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/OwnerKeyRegistrationRequest"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/digital-key-gen2/event-notification/key-info-notification": {
-            "post": {
-                "tags": [
-                    "tsc-notification-gen2"
-                ],
-                "summary": "Event notification",
-                "description": "Event notification related to digital key creation or deletion.",
-                "operationId": "createOrTerminateEventNotification",
-                "parameters": [
-                    {
-                        "name": "requestId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/EventNotificationRequest"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/s2s/digital-key/gen2/keys": {
-            "get": {
-                "tags": [
-                    "s2s-gen2"
-                ],
-                "summary": "Get Digital Key list",
-                "description": "Returns list of digital keys.",
-                "operationId": "digitalKeys",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DigitalKeyResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "s2s-gen2"
-                ],
-                "summary": "Delete Digital Key",
-                "description": "Returns user digital key delete information.",
-                "operationId": "deleteKey",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/s2s/digital-key/gen2/keys/audit": {
-            "get": {
-                "tags": [
-                    "s2s-gen2"
-                ],
-                "summary": "Audit list",
-                "description": "Fetch the list of events performed",
-                "operationId": "audit",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AuditSummaryResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/digital-key/gen2/status": {
-            "get": {
-                "tags": [
-                    "digital-key-gen2"
-                ],
-                "summary": "Get key status",
-                "description": "Returns user current digital key status along with friend key details.",
-                "operationId": "keyInfo",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "x-guid",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/KeyStatusResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/digital-key/gen2/owner/pairing-password": {
-            "get": {
-                "tags": [
-                    "digital-key-gen2"
-                ],
-                "summary": "Get Pairing Password",
-                "description": "Returns user current digital key pairing password.",
-                "operationId": "keyPairingPassword",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "x-guid",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/PairingPasswordResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/digital-key/gen2/keys": {
-            "get": {
-                "tags": [
-                    "digital-key-gen2"
-                ],
-                "summary": "Get Digital Key list",
-                "description": "Returns list of digital keys.",
-                "operationId": "digitalKeys_1",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "x-guid",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DigitalKeyResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "digital-key-gen2"
-                ],
-                "summary": "Delete Digital Key",
-                "description": "Returns user digital key delete information.",
-                "operationId": "deleteKey_2",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "x-guid",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/s2s/digital-key/gen2/keys/{keyId}": {
-            "delete": {
-                "tags": [
-                    "s2s-gen2"
-                ],
-                "summary": "Delete Digital Key",
-                "description": "Returns user digital key delete information.",
-                "operationId": "deleteKey_1",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/digital-key/gen2/keys/{keyId}": {
-            "delete": {
-                "tags": [
-                    "digital-key-gen2"
-                ],
-                "summary": "Delete Digital Key",
-                "description": "Returns user digital key delete information.",
-                "operationId": "deleteKey_3",
-                "parameters": [
-                    {
-                        "name": "x-correlationId",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "x-guid",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "vin",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "keyId",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "responseCode - DK-0000, description - Request Processed Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Invalid Request",
-                                            "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
-                                            "responseCode": "400"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "responseCode - APIGW-403: Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Unauthorized",
-                                            "detailedDescription": "You do not have the required permissions to access this resource.",
-                                            "responseCode": "APIGW-403"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Resource Not Found",
-                                            "detailedDescription": "No parent record exist.",
-                                            "responseCode": "CTP-DK-GEN2-1015"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "responseCode - 500: Internal server error.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Status"
-                                },
-                                "example": {
-                                    "messages": [
-                                        {
-                                            "description": "Internal Server Error",
-                                            "detailedDescription": "An unexpected error occurred on the server.",
-                                            "responseCode": "500"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "Message": {
-                "type": "object",
-                "properties": {
-                    "description": {
-                        "type": "string",
-                        "description": "Short description of the status",
-                        "example": "Request Processed Successfully"
-                    },
-                    "detailedDescription": {
-                        "type": "string",
-                        "description": "Detailed explanation of the status",
-                        "example": "Request Processed Successfully"
-                    },
-                    "responseCode": {
-                        "type": "string",
-                        "description": "Response code indicating the result of the operation",
-                        "example": "DK-0000"
-                    }
-                },
-                "description": "Details of the status message"
-            },
-            "Status": {
-                "type": "object",
-                "properties": {
-                    "messages": {
-                        "type": "array",
-                        "description": "List of status messages",
-                        "items": {
-                            "$ref": "#/components/schemas/Message"
-                        }
-                    }
-                },
-                "description": "Status of the operation, containing messages"
-            },
-            "CalibrationRequest": {
-                "type": "object",
-                "properties": {
-                    "keyId": {
-                        "type": "string",
-                        "description": "Unique identifier for the key",
-                        "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
-                    },
-                    "model": {
-                        "type": "string",
-                        "description": "Cell phone model associated with the key",
-                        "example": "iPhone 12"
-                    },
-                    "manufacturer": {
-                        "type": "string",
-                        "description": "Cell phone manufacturer associated with the key",
-                        "example": "Apple"
-                    }
-                }
-            },
-            "DigitalKeyCertificates": {
-                "type": "object",
-                "properties": {
-                    "statusMessage": {
-                        "type": "string",
-                        "description": "Status message",
-                        "example": "ResponseFailure",
-                        "enum": [
-                            "ResponseFailure",
-                            "ResponseTimeout",
-                            "ResponseSuccess"
-                        ]
-                    }
-                }
-            },
-            "DigitalKeySignature": {
-                "type": "object",
-                "properties": {
-                    "statusMessage": {
-                        "type": "string",
-                        "description": "Status message",
-                        "example": "ResponseFailure",
-                        "enum": [
-                            "ResponseFailure",
-                            "ResponseTimeout",
-                            "ResponseSuccess"
-                        ]
-                    }
-                }
-            },
-            "OwnerKeyRegistrationRequest": {
-                "type": "object",
-                "properties": {
-                    "requestId": {
-                        "maxLength": 37,
-                        "minLength": 0,
-                        "type": "string",
-                        "example": "d6e13a43-b1a5-4a83-afca-28437cfaade4"
-                    },
-                    "resultCode": {
-                        "maxLength": 12,
-                        "minLength": 0,
-                        "type": "string",
-                        "example": "000381020201"
-                    },
-                    "recreateKey": {
-                        "$ref": "#/components/schemas/recreateKey"
-                    },
-                    "pairingPassword": {
-                        "$ref": "#/components/schemas/PairingPasswordRequest"
-                    },
-                    "digitalKeySignature": {
-                        "$ref": "#/components/schemas/DigitalKeySignature"
-                    },
-                    "digitalKeyIntermediateCertificates": {
-                        "$ref": "#/components/schemas/digitalKeyIntermediateCertificates"
-                    },
-                    "digitalKeyCertificates": {
-                        "$ref": "#/components/schemas/DigitalKeyCertificates"
-                    }
-                }
-            },
-            "PairingPasswordRequest": {
-                "type": "object",
-                "properties": {
-                    "statusMessage": {
-                        "type": "string",
-                        "description": "Status message",
-                        "example": "ResponseFailure",
-                        "enum": [
-                            "ResponseFailure",
-                            "ResponseTimeout",
-                            "ResponseSuccess"
-                        ]
-                    },
-                    "pairingPassword": {
-                        "type": "string",
-                        "example": "99999999"
-                    }
-                }
-            },
-            "digitalKeyIntermediateCertificates": {
-                "type": "object",
-                "properties": {
-                    "statusMessage": {
-                        "type": "string",
-                        "description": "Status message",
-                        "example": "ResponseFailure",
-                        "enum": [
-                            "ResponseFailure",
-                            "ResponseTimeout",
-                            "ResponseSuccess"
-                        ]
-                    }
-                }
-            },
-            "recreateKey": {
-                "type": "object",
-                "properties": {
-                    "statusMessage": {
-                        "type": "string",
-                        "description": "Status message",
-                        "example": "ResponseFailure",
-                        "enum": [
-                            "ResponseFailure",
-                            "ResponseTimeout",
-                            "ResponseSuccess"
-                        ]
-                    }
-                }
-            },
-            "DeviceDigitalKey": {
-                "type": "object",
-                "properties": {
-                    "digitalKeyStatus": {
-                        "type": "string",
-                        "description": "Current status of the digital key",
-                        "example": "VALID",
-                        "enum": [
-                            "VALID",
-                            "PAUSE",
-                            "INVALID",
-                            "CONSIDER_VALID",
-                            "CONSIDER_INVALID"
-                        ]
-                    },
-                    "friendlyName": {
-                        "type": "string",
-                        "description": "A user-friendly name for the device, making it easier to identify.",
-                        "example": "Dan's device"
-                    }
-                }
-            },
-            "EcuDigitalKey": {
-                "type": "object",
-                "properties": {
-                    "digitalKeyStatus": {
-                        "type": "string",
-                        "description": "Current status of the digital key",
-                        "example": "ResponseFailure",
-                        "enum": [
-                            "ResponseFailure",
-                            "ResponseTimeout",
-                            "ResponseSuccess"
-                        ]
-                    },
-                    "type": {
-                        "type": "string",
-                        "description": "Type of ECU operation, typically indicating the action being performed",
-                        "example": "Registration",
-                        "enum": [
-                            "Registration",
-                            "Deletion",
-                            "VerifierSaltDelivery"
-                        ]
-                    }
-                }
-            },
-            "EventNotificationRequest": {
-                "type": "object",
-                "properties": {
-                    "vin": {
-                        "maxLength": 17,
-                        "minLength": 0,
-                        "type": "string",
-                        "description": "Incoming vehicle.",
-                        "example": "JTHBE1D21E5005002"
-                    },
-                    "ecuId": {
-                        "maxLength": 32,
-                        "minLength": 0,
-                        "type": "string",
-                        "example": "4938205039594"
-                    },
-                    "keyId": {
-                        "maxLength": 128,
-                        "minLength": 0,
-                        "type": "string",
-                        "description": "Incoming vehicle.",
-                        "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
-                    },
-                    "keyType": {
-                        "maxLength": 32,
-                        "minLength": 0,
-                        "pattern": "OWNER|SHARED",
-                        "type": "string",
-                        "example": "OWNER"
-                    },
-                    "ecu": {
-                        "$ref": "#/components/schemas/EcuDigitalKey"
-                    },
-                    "device": {
-                        "$ref": "#/components/schemas/DeviceDigitalKey"
-                    }
-                }
-            },
-            "DigitalKeyResponse": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "$ref": "#/components/schemas/Status"
-                    },
-                    "payload": {
-                        "$ref": "#/components/schemas/DigitalKeyResponsePayload"
-                    }
-                },
-                "description": "Response model containing digital keys information and status."
-            },
-            "DigitalKeyResponsePayload": {
-                "type": "object",
-                "properties": {
-                    "digitalKeyInfoList": {
-                        "type": "object",
-                        "properties": {
-                            "keyId": {
-                                "type": "string",
-                                "description": "Incoming vehicle.",
-                                "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
-                            },
-                            "keyType": {
-                                "type": "string",
-                                "description": "ID for tracing requests",
-                                "example": "OWNER",
-                                "enum": [
-                                    "OWNER",
-                                    "SHARED"
-                                ]
-                            },
-                            "registeredDate": {
-                                "type": "string",
-                                "description": "Date registered in the format 'yyyy/MM/dd HH:mm:ss'",
-                                "example": "2023/12/13 08:00:00"
-                            },
-                            "friendlyName": {
-                                "type": "string",
-                                "description": "A user-friendly name for the device, making it easier to identify.",
-                                "example": "Azargani's Phone"
-                            }
-                        },
-                        "description": "Represents details about the digital key, including key ID, key type, registration date, and friendly name."
-                    }
-                },
-                "description": "Payload containing a list of digital key information details."
-            },
-            "AuditSummaryResponse": {
-                "type": "object",
-                "properties": {
-                    "payload": {
-                        "$ref": "#/components/schemas/AuditSummaryResponsePayload"
-                    },
-                    "status": {
-                        "$ref": "#/components/schemas/Status"
-                    }
-                },
-                "description": "Response containing audit summary details."
-            },
-            "AuditSummaryResponseAudit": {
-                "type": "object",
-                "properties": {
-                    "vin": {
-                        "type": "string",
-                        "description": "Vehicle Identification Number.",
-                        "example": "JTHBE1D21E5005002"
-                    },
-                    "guid": {
-                        "type": "string",
-                        "description": "Unique identifier for the audit.",
-                        "example": "2aa162bcd2cf464fb5ee8b6848fa972a"
-                    },
-                    "action": {
-                        "type": "string",
-                        "description": "The action performed during the audit.",
-                        "example": "Get Digital Keys for vin JTHBE1D21E5005002"
-                    },
-                    "keyId": {
-                        "type": "string",
-                        "description": "Key identifier associated with the audit.",
-                        "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
-                    },
-                    "input": {
-                        "type": "string",
-                        "description": "Input provided for the audit.",
-                        "example": "{\"correlationId\":\"203b89b2-5e43-490f-aec1-f321413cb5a7\"}"
-                    },
-                    "result": {
-                        "type": "string",
-                        "description": "Result of the audit action.",
-                        "example": "SUCCESS"
-                    },
-                    "timestamp": {
-                        "type": "string",
-                        "description": "Timestamp of when the audit occurred.",
-                        "example": "2024-09-27T10:15:30Z"
-                    }
-                },
-                "description": "Details of an individual audit summary."
-            },
-            "AuditSummaryResponsePayload": {
-                "type": "object",
-                "properties": {
-                    "audits": {
-                        "type": "array",
-                        "description": "List of audit summaries.",
-                        "items": {
-                            "$ref": "#/components/schemas/AuditSummaryResponseAudit"
-                        }
-                    }
-                },
-                "description": "Payload containing a list of audit summaries."
-            },
-            "KeyStatusResponse": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "$ref": "#/components/schemas/Status"
-                    },
-                    "payload": {
-                        "$ref": "#/components/schemas/KeyStatusResponsePayload"
-                    }
-                },
-                "description": "Response containing key status information"
-            },
-            "KeyStatusResponsePayload": {
-                "type": "object",
-                "properties": {
-                    "isCalibrated": {
-                        "type": "boolean",
-                        "description": "Indicates whether the key is calibrated",
-                        "example": true,
-                        "enum": [
-                            true,
-                            false
-                        ]
-                    },
-                    "pairingStatus": {
-                        "type": "string",
-                        "description": "Pairing status of the digital key",
-                        "example": "PAIRED",
-                        "enum": [
-                            "PAIRED",
-                            "READY",
-                            "NOT_READY"
-                        ]
-                    },
-                    "sharedKeyCount": {
-                        "type": "string",
-                        "description": "Number of shared keys. This value depends on the number of records in the database that match keyType as 'shared' and ecuType as 'registration'.",
-                        "example": "3"
-                    },
-                    "ownerKeyId": {
-                        "type": "string",
-                        "description": "Indicates OwnerKeyId",
-                        "example": "0000000000111111111122222222223333333333"
-                    }
-                },
-                "description": "Details of the key status"
-            },
-            "PairingPasswordResponse": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "$ref": "#/components/schemas/Status"
-                    },
-                    "payload": {
-                        "$ref": "#/components/schemas/PairingPasswordResponsePayload"
-                    }
-                },
-                "description": "Response containing the pairing password, brand information and its status."
-            },
-            "PairingPasswordResponsePayload": {
-                "type": "object",
-                "properties": {
-                    "pairingPassword": {
-                        "type": "string",
-                        "description": "The pairing password for the digital key.",
-                        "example": "abcd-1234"
-                    },
-                    "brandName": {
-                        "type": "string",
-                        "description": "The brand name associated with the digital key.",
-                        "example": "TMC1"
-                    },
-                    "brandId": {
-                        "type": "string",
-                        "description": "The brand ID associated with the digital key.",
-                        "example": "0007"
-                    },
-                    "nfcPlacementGraphicsIdentifier": {
-                        "type": "string",
-                        "description": "The ID that defines the location of NFC reader.",
-                        "example": "LHD‑LD"
-                    }
-                },
-                "description": "Payload containing the pairing password and brand information."
-            },
-            "DeleteDigitalKeyResponse": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "$ref": "#/components/schemas/Status"
-                    }
-                },
-                "description": "Response model for deleting a digital key"
-            }
-        }
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://onedk.dev.telematicsct.com",
+      "description": "Server URL in Development environment"
     }
+  ],
+  "tags": [
+    {
+      "name": "digital-key-gen2",
+      "description": "Digital Key APIs consumed by T/L App"
+    },
+    {
+      "name": "s2s-gen2",
+      "description": "Digital Key APIs consumed by other CTP services"
+    },
+    {
+      "name": "tsc-notification-gen2",
+      "description": "APIs related to TSC notification operations"
+    }
+  ],
+  "paths": {
+    "/v1/s2s/digital-key/gen2/calibration": {
+      "get": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "UWB/BLE calibration",
+        "description": "API for UWB/BLE calibration",
+        "operationId": "getCalibration",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manufacturer",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "UWB/BLE calibration",
+        "description": "API for UWB/BLE calibration",
+        "operationId": "updateCalibration",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/S2SCalibrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "UWB/BLE calibration",
+        "description": "API for UWB/BLE calibration",
+        "operationId": "createCalibration",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/S2SCalibrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "UWB/BLE calibration",
+        "description": "API for UWB/BLE calibration",
+        "operationId": "deleteCalibration",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manufacturer",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/s2s/digital-key/gen2/owner/pairing-password/notification": {
+      "post": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "Owner Pairing Password Email Notification",
+        "description": "Resending email Notification for the status of the owner-key pairing process from S2S to CTP.",
+        "operationId": "pairingPasswordNotification",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-key/gen2/calibration": {
+      "post": {
+        "tags": [
+          "digital-key-gen2"
+        ],
+        "summary": "UWB/BLE calibration",
+        "description": "API for UWB/BLE calibration",
+        "operationId": "calibration",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-guid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalibrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-key-gen2/ownerkey-registration/create-pairing-password-notification": {
+      "post": {
+        "tags": [
+          "tsc-notification-gen2"
+        ],
+        "summary": "Notifications related to DK ECU provisioning",
+        "description": "Notify the status of the DK ECU provisioning for each step.",
+        "operationId": "createPairingPasswordNotification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerKeyRegistrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-key-gen2/event-notification/key-info-notification": {
+      "post": {
+        "tags": [
+          "tsc-notification-gen2"
+        ],
+        "summary": "Event notification",
+        "description": "Event notification related to digital key creation or deletion.",
+        "operationId": "createOrTerminateEventNotification",
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventNotificationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/s2s/digital-key/gen2/keys": {
+      "get": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "Get Digital Key list",
+        "description": "Returns list of digital keys.",
+        "operationId": "digitalKeys",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DigitalKeyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "Delete Digital Key",
+        "description": "Returns user digital key delete information.",
+        "operationId": "deleteKey",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/s2s/digital-key/gen2/keys/audit": {
+      "get": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "Audit list",
+        "description": "Fetch the list of events performed",
+        "operationId": "audit",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditSummaryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-key/gen2/status": {
+      "get": {
+        "tags": [
+          "digital-key-gen2"
+        ],
+        "summary": "Get key status",
+        "description": "Returns user current digital key status along with friend key details.",
+        "operationId": "keyInfo",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-guid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyStatusResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-key/gen2/owner/pairing-password": {
+      "get": {
+        "tags": [
+          "digital-key-gen2"
+        ],
+        "summary": "Get Pairing Password",
+        "description": "Returns user current digital key pairing password.",
+        "operationId": "keyPairingPassword",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-guid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairingPasswordResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-key/gen2/keys": {
+      "get": {
+        "tags": [
+          "digital-key-gen2"
+        ],
+        "summary": "Get Digital Key list",
+        "description": "Returns list of digital keys.",
+        "operationId": "digitalKeys_1",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-guid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DigitalKeyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "digital-key-gen2"
+        ],
+        "summary": "Delete Digital Key",
+        "description": "Returns user digital key delete information.",
+        "operationId": "deleteKey_2",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-guid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/s2s/digital-key/gen2/keys/{keyId}": {
+      "delete": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "Delete Digital Key",
+        "description": "Returns user digital key delete information.",
+        "operationId": "deleteKey_1",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-key/gen2/keys/{keyId}": {
+      "delete": {
+        "tags": [
+          "digital-key-gen2"
+        ],
+        "summary": "Delete Digital Key",
+        "description": "Returns user digital key delete information.",
+        "operationId": "deleteKey_3",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-guid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteDigitalKeyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "S2SCalibrationRequest": {
+        "type": "object",
+        "properties": {
+          "manufacturer": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string",
+            "description": "Unique identifier for the key",
+            "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
+          },
+          "bleRssiValue": {
+            "type": "string",
+            "description": "Cell phone model associated with the key",
+            "example": "iPhone 12"
+          },
+          "uwbRssiValue": {
+            "type": "string",
+            "description": "Cell phone manufacturer associated with the key",
+            "example": "Apple"
+          },
+          "uwbDistanceValue": {
+            "type": "string"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Short description of the status",
+            "example": "Request Processed Successfully"
+          },
+          "detailedDescription": {
+            "type": "string",
+            "description": "Detailed explanation of the status",
+            "example": "Request Processed Successfully"
+          },
+          "responseCode": {
+            "type": "string",
+            "description": "Response code indicating the result of the operation",
+            "example": "DK-0000"
+          }
+        },
+        "description": "Details of the status message"
+      },
+      "Status": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "description": "List of status messages",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          }
+        },
+        "description": "Status of the operation, containing messages"
+      },
+      "CalibrationRequest": {
+        "type": "object",
+        "properties": {
+          "keyId": {
+            "type": "string",
+            "description": "Unique identifier for the key",
+            "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
+          },
+          "model": {
+            "type": "string",
+            "description": "Cell phone model associated with the key",
+            "example": "iPhone 12"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "Cell phone manufacturer associated with the key",
+            "example": "Apple"
+          }
+        }
+      },
+      "DigitalKeyCertificates": {
+        "type": "object",
+        "properties": {
+          "statusMessage": {
+            "type": "string",
+            "description": "Status message",
+            "example": "ResponseFailure",
+            "enum": [
+              "ResponseFailure",
+              "ResponseTimeout",
+              "ResponseSuccess"
+            ]
+          }
+        }
+      },
+      "DigitalKeySignature": {
+        "type": "object",
+        "properties": {
+          "statusMessage": {
+            "type": "string",
+            "description": "Status message",
+            "example": "ResponseFailure",
+            "enum": [
+              "ResponseFailure",
+              "ResponseTimeout",
+              "ResponseSuccess"
+            ]
+          }
+        }
+      },
+      "OwnerKeyRegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "maxLength": 37,
+            "minLength": 0,
+            "type": "string",
+            "example": "d6e13a43-b1a5-4a83-afca-28437cfaade4"
+          },
+          "resultCode": {
+            "maxLength": 12,
+            "minLength": 0,
+            "type": "string",
+            "example": "000381020201"
+          },
+          "recreateKey": {
+            "$ref": "#/components/schemas/recreateKey"
+          },
+          "pairingPassword": {
+            "$ref": "#/components/schemas/PairingPasswordRequest"
+          },
+          "digitalKeySignature": {
+            "$ref": "#/components/schemas/DigitalKeySignature"
+          },
+          "digitalKeyIntermediateCertificates": {
+            "$ref": "#/components/schemas/digitalKeyIntermediateCertificates"
+          },
+          "digitalKeyCertificates": {
+            "$ref": "#/components/schemas/DigitalKeyCertificates"
+          }
+        }
+      },
+      "PairingPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "statusMessage": {
+            "type": "string",
+            "description": "Status message",
+            "example": "ResponseFailure",
+            "enum": [
+              "ResponseFailure",
+              "ResponseTimeout",
+              "ResponseSuccess"
+            ]
+          },
+          "pairingPassword": {
+            "type": "string",
+            "example": "99999999"
+          }
+        }
+      },
+      "digitalKeyIntermediateCertificates": {
+        "type": "object",
+        "properties": {
+          "statusMessage": {
+            "type": "string",
+            "description": "Status message",
+            "example": "ResponseFailure",
+            "enum": [
+              "ResponseFailure",
+              "ResponseTimeout",
+              "ResponseSuccess"
+            ]
+          }
+        }
+      },
+      "recreateKey": {
+        "type": "object",
+        "properties": {
+          "statusMessage": {
+            "type": "string",
+            "description": "Status message",
+            "example": "ResponseFailure",
+            "enum": [
+              "ResponseFailure",
+              "ResponseTimeout",
+              "ResponseSuccess"
+            ]
+          }
+        }
+      },
+      "DeviceDigitalKey": {
+        "type": "object",
+        "properties": {
+          "digitalKeyStatus": {
+            "type": "string",
+            "description": "Current status of the digital key",
+            "example": "VALID",
+            "enum": [
+              "VALID",
+              "PAUSE",
+              "CONSIDER_VALID"
+            ]
+          },
+          "friendlyName": {
+            "type": "string",
+            "description": "A user-friendly name for the device, making it easier to identify.",
+            "example": "Dan's device"
+          }
+        }
+      },
+      "EcuDigitalKey": {
+        "type": "object",
+        "properties": {
+          "digitalKeyStatus": {
+            "type": "string",
+            "description": "Current status of the digital key",
+            "example": "ResponseFailure",
+            "enum": [
+              "ResponseFailure",
+              "ResponseTimeout",
+              "ResponseSuccess"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of ECU operation, typically indicating the action being performed",
+            "example": "Registration",
+            "enum": [
+              "Registration",
+              "Deletion",
+              "VerifierSaltDelivery"
+            ]
+          }
+        }
+      },
+      "EventNotificationRequest": {
+        "type": "object",
+        "properties": {
+          "vin": {
+            "maxLength": 17,
+            "minLength": 0,
+            "type": "string",
+            "description": "Incoming vehicle.",
+            "example": "JTHBE1D21E5005002"
+          },
+          "ecuId": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "example": "4938205039594"
+          },
+          "keyId": {
+            "maxLength": 128,
+            "minLength": 0,
+            "type": "string",
+            "description": "Incoming vehicle.",
+            "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
+          },
+          "keyType": {
+            "maxLength": 32,
+            "minLength": 0,
+            "pattern": "OWNER|SHARED",
+            "type": "string",
+            "example": "OWNER"
+          },
+          "ecu": {
+            "$ref": "#/components/schemas/EcuDigitalKey"
+          },
+          "device": {
+            "$ref": "#/components/schemas/DeviceDigitalKey"
+          }
+        }
+      },
+      "DigitalKeyResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/DigitalKeyResponsePayload"
+          }
+        },
+        "description": "Response model containing digital keys information and status."
+      },
+      "DigitalKeyResponsePayload": {
+        "type": "object",
+        "properties": {
+          "digitalKeyInfoList": {
+            "type": "object",
+            "properties": {
+              "keyId": {
+                "type": "string",
+                "description": "Incoming vehicle.",
+                "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
+              },
+              "keyType": {
+                "type": "string",
+                "description": "ID for tracing requests",
+                "example": "OWNER",
+                "enum": [
+                  "OWNER",
+                  "SHARED"
+                ]
+              },
+              "registeredDate": {
+                "type": "string",
+                "description": "Date registered in the format 'yyyy/MM/dd HH:mm:ss'",
+                "example": "2023/12/13 08:00:00"
+              },
+              "friendlyName": {
+                "type": "string",
+                "description": "A user-friendly name for the device, making it easier to identify.",
+                "example": "Azargani's Phone"
+              }
+            },
+            "description": "Represents details about the digital key, including key ID, key type, registration date, and friendly name."
+          }
+        },
+        "description": "Payload containing a list of digital key information details."
+      },
+      "AuditSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "payload": {
+            "$ref": "#/components/schemas/AuditSummaryResponsePayload"
+          },
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          }
+        },
+        "description": "Response containing audit summary details."
+      },
+      "AuditSummaryResponseAudit": {
+        "type": "object",
+        "properties": {
+          "vin": {
+            "type": "string",
+            "description": "Vehicle Identification Number.",
+            "example": "JTHBE1D21E5005002"
+          },
+          "guid": {
+            "type": "string",
+            "description": "Unique identifier for the audit.",
+            "example": "2aa162bcd2cf464fb5ee8b6848fa972a"
+          },
+          "action": {
+            "type": "string",
+            "description": "The action performed during the audit.",
+            "example": "Get Digital Keys for vin JTHBE1D21E5005002"
+          },
+          "keyId": {
+            "type": "string",
+            "description": "Key identifier associated with the audit.",
+            "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
+          },
+          "input": {
+            "type": "string",
+            "description": "Input provided for the audit.",
+            "example": "{\"correlationId\":\"203b89b2-5e43-490f-aec1-f321413cb5a7\"}"
+          },
+          "result": {
+            "type": "string",
+            "description": "Result of the audit action.",
+            "example": "SUCCESS"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of when the audit occurred.",
+            "example": "2024-09-27T10:15:30Z"
+          }
+        },
+        "description": "Details of an individual audit summary."
+      },
+      "AuditSummaryResponsePayload": {
+        "type": "object",
+        "properties": {
+          "audits": {
+            "type": "array",
+            "description": "List of audit summaries.",
+            "items": {
+              "$ref": "#/components/schemas/AuditSummaryResponseAudit"
+            }
+          }
+        },
+        "description": "Payload containing a list of audit summaries."
+      },
+      "KeyStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/KeyStatusResponsePayload"
+          }
+        },
+        "description": "Response containing key status information"
+      },
+      "KeyStatusResponsePayload": {
+        "type": "object",
+        "properties": {
+          "isCalibrated": {
+            "type": "boolean",
+            "description": "Indicates whether the key is calibrated",
+            "example": true,
+            "enum": [true, false]
+          },
+          "pairingStatus": {
+            "type": "string",
+            "description": "Pairing status of the digital key",
+            "example": "PAIRED",
+            "enum": [
+              "PAIRED",
+              "READY",
+              "NOT_READY"
+            ]
+          },
+          "sharedKeyCount": {
+            "type": "string",
+            "description": "Number of shared keys. This value depends on the number of records in the database that match keyType as 'shared' and ecuType as 'registration'.",
+            "example": "3"
+          },
+          "ownerKeyId": {
+            "type": "string",
+            "description": "Indicates OwnerKeyId",
+            "example": "0000000000111111111122222222223333333333"
+          }
+        },
+        "description": "Details of the key status"
+      },
+      "PairingPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/PairingPasswordResponsePayload"
+          }
+        },
+        "description": "Response containing the pairing password, brand information and its status."
+      },
+      "PairingPasswordResponsePayload": {
+        "type": "object",
+        "properties": {
+          "pairingPassword": {
+            "type": "string",
+            "description": "The pairing password for the digital key.",
+            "example": "abcd-1234"
+          },
+          "oemId": {
+            "type": "string",
+            "description": "The vehicle OEM ID associated with digital key creation.",
+            "example": "TMC1"
+          },
+          "brandName": {
+            "type": "string",
+            "description": "The brand name associated with digital key creation.",
+            "example": "TMC1"
+          },
+          "brandId": {
+            "type": "string",
+            "description": "The brand ID associated with digital key creation.",
+            "example": "0007"
+          },
+          "nfcPlacementGraphicsIdentifier": {
+            "type": "string",
+            "description": "The ID that defines the location of NFC reader.",
+            "example": "LHD‑LD"
+          },
+          "radioTechnologies": {
+            "type": "array",
+            "description": "List of supported radio technologies used by the vehicle.",
+            "example": "BT,NFC",
+            "items": {
+              "type": "string",
+              "description": "List of supported radio technologies used by the vehicle.",
+              "example": "BT,NFC"
+            }
+          }
+        },
+        "description": "Payload containing the pairing password and brand information."
+      },
+      "DeleteDigitalKeyResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          }
+        },
+        "description": "Response model for deleting a digital key"
+      }
+    }
+  }
 }
