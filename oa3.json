@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "Digital Key Gen2",
     "description": "Set of APIs for orchestrating various digital key actions between T/L app, CTP services and TSC-DK",
@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://onedk.dev.telematicsct.com",
+      "url": "https://oactp.dev-telematicsct.com",
       "description": "Server URL in Development environment"
     }
   ],
@@ -38,33 +38,17 @@
         "summary": "UWB/BLE calibration",
         "description": "API for UWB/BLE calibration",
         "operationId": "getCalibration",
-        "parameters": [
-          {
-            "name": "x-correlationId",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "manufacturer",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "model",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -84,12 +68,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -126,25 +119,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -181,6 +155,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -200,12 +184,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -242,25 +235,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -297,6 +271,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -316,12 +300,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -358,25 +351,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -419,6 +393,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -438,12 +422,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -480,25 +473,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -535,6 +509,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -554,12 +538,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -601,6 +594,73 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/digital-key/gen2/owner/pairing-password/notification": {
+      "post": {
+        "tags": [
+          "digital-key-gen2"
+        ],
+        "summary": "Owner Pairing Password Email Notification",
+        "description": "Resending email Notification for the status of the owner-key pairing process from OneApp to CTP.",
+        "operationId": "pairingPasswordNotification_1",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-guid",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "403": {
             "description": "responseCode - APIGW-403: Unauthorized",
@@ -615,6 +675,44 @@
                       "description": "Unauthorized",
                       "detailedDescription": "You do not have the required permissions to access this resource.",
                       "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
                     }
                   ]
                 }
@@ -669,6 +767,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -688,12 +796,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -730,25 +847,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -777,6 +875,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -796,12 +904,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -838,25 +955,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -878,7 +976,7 @@
           {
             "name": "requestId",
             "in": "header",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -895,6 +993,16 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -914,12 +1022,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -961,6 +1078,65 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/s2s/digital-key/gen2/status": {
+      "get": {
+        "tags": [
+          "s2s-gen2"
+        ],
+        "summary": "Get key status",
+        "description": "Returns user current digital key status along with friend key details.",
+        "operationId": "keyInfo",
+        "parameters": [
+          {
+            "name": "x-correlationId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyStatusResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Invalid Request",
+                      "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
+                      "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "403": {
             "description": "responseCode - APIGW-403: Unauthorized",
@@ -975,6 +1151,44 @@
                       "description": "Unauthorized",
                       "detailedDescription": "You do not have the required permissions to access this resource.",
                       "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Resource Not Found",
+                      "detailedDescription": "No parent record exist.",
+                      "responseCode": "CTP-DK-GEN2-1015"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "responseCode - 500: Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Internal Server Error",
+                      "detailedDescription": "An unexpected error occurred on the server.",
+                      "responseCode": "500"
                     }
                   ]
                 }
@@ -1040,6 +1254,25 @@
               }
             }
           },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
             "content": {
@@ -1072,25 +1305,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -1154,6 +1368,25 @@
               }
             }
           },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
             "content": {
@@ -1186,25 +1419,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -1241,6 +1455,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditSummaryResponse"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -1260,12 +1484,21 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuditSummaryResponse"
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
                 }
               }
             }
@@ -1307,25 +1540,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
-                    }
-                  ]
-                }
-              }
-            }
           }
         }
       }
@@ -1337,7 +1551,7 @@
         ],
         "summary": "Get key status",
         "description": "Returns user current digital key status along with friend key details.",
-        "operationId": "keyInfo",
+        "operationId": "keyInfo_1",
         "parameters": [
           {
             "name": "x-correlationId",
@@ -1365,6 +1579,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "responseCode - DK-0000, description - Request Processed Successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyStatusResponse"
+                }
+              }
+            }
+          },
           "400": {
             "description": "responseCodes - 400: request header/body is incorrect or missing mandatory attributes/values, CTP-DK-GEN2-1007: GUID used in request is not associated with VIN, CTP-DK-GEN2-1002: No active remote subscription available for the vehicle, CTP-DK-GEN2-1042: TSC-DK Error., CTP-DK-GEN2-1030: Error calling external service",
             "content": {
@@ -1378,6 +1602,25 @@
                       "description": "Invalid Request",
                       "detailedDescription": "request header/body is incorrect or missing mandatory attributes/values",
                       "responseCode": "400"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -1403,16 +1646,6 @@
               }
             }
           },
-          "200": {
-            "description": "responseCode - DK-0000, description - Request Processed Successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/KeyStatusResponse"
-                }
-              }
-            }
-          },
           "500": {
             "description": "responseCode - 500: Internal server error.",
             "content": {
@@ -1426,25 +1659,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -1518,6 +1732,25 @@
               }
             }
           },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
             "content": {
@@ -1550,25 +1783,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -1642,6 +1856,25 @@
               }
             }
           },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
             "content": {
@@ -1679,25 +1912,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
-                    }
-                  ]
-                }
-              }
-            }
           }
         }
       },
@@ -1707,7 +1921,7 @@
         ],
         "summary": "Delete Digital Key",
         "description": "Returns user digital key delete information.",
-        "operationId": "deleteKey_2",
+        "operationId": "deleteKey_1",
         "parameters": [
           {
             "name": "x-correlationId",
@@ -1764,6 +1978,25 @@
               }
             }
           },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
             "content": {
@@ -1801,25 +2034,6 @@
                 }
               }
             }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
-                    }
-                  ]
-                }
-              }
-            }
           }
         }
       }
@@ -1831,7 +2045,7 @@
         ],
         "summary": "Delete Digital Key",
         "description": "Returns user digital key delete information.",
-        "operationId": "deleteKey_1",
+        "operationId": "deleteKey_2",
         "parameters": [
           {
             "name": "x-correlationId",
@@ -1888,6 +2102,25 @@
               }
             }
           },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
             "content": {
@@ -1920,25 +2153,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -2020,6 +2234,25 @@
               }
             }
           },
+          "403": {
+            "description": "responseCode - APIGW-403: Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                },
+                "example": {
+                  "messages": [
+                    {
+                      "description": "Unauthorized",
+                      "detailedDescription": "You do not have the required permissions to access this resource.",
+                      "responseCode": "APIGW-403"
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "404": {
             "description": "responseCodes - CTP-DK-GEN2-1015: No parent record exist., CTP-DK-GEN2-1039: Account details Not available., CTP-DK-GEN1-1045: Device Model Not Found.",
             "content": {
@@ -2052,25 +2285,6 @@
                       "description": "Internal Server Error",
                       "detailedDescription": "An unexpected error occurred on the server.",
                       "responseCode": "500"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "responseCode - APIGW-403: Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Status"
-                },
-                "example": {
-                  "messages": [
-                    {
-                      "description": "Unauthorized",
-                      "detailedDescription": "You do not have the required permissions to access this resource.",
-                      "responseCode": "APIGW-403"
                     }
                   ]
                 }
@@ -2111,6 +2325,7 @@
       },
       "Message": {
         "type": "object",
+        "description": "Details of the status message",
         "properties": {
           "description": {
             "type": "string",
@@ -2127,11 +2342,11 @@
             "description": "Response code indicating the result of the operation",
             "example": "DK-0000"
           }
-        },
-        "description": "Details of the status message"
+        }
       },
       "Status": {
         "type": "object",
+        "description": "Status of the operation, containing messages",
         "properties": {
           "messages": {
             "type": "array",
@@ -2140,8 +2355,7 @@
               "$ref": "#/components/schemas/Message"
             }
           }
-        },
-        "description": "Status of the operation, containing messages"
+        }
       },
       "CalibrationRequest": {
         "type": "object",
@@ -2169,12 +2383,12 @@
           "statusMessage": {
             "type": "string",
             "description": "Status message",
-            "example": "ResponseFailure",
             "enum": [
               "ResponseFailure",
               "ResponseTimeout",
               "ResponseSuccess"
-            ]
+            ],
+            "example": "ResponseFailure"
           }
         }
       },
@@ -2184,12 +2398,12 @@
           "statusMessage": {
             "type": "string",
             "description": "Status message",
-            "example": "ResponseFailure",
             "enum": [
               "ResponseFailure",
               "ResponseTimeout",
               "ResponseSuccess"
-            ]
+            ],
+            "example": "ResponseFailure"
           }
         }
       },
@@ -2197,16 +2411,16 @@
         "type": "object",
         "properties": {
           "requestId": {
-            "maxLength": 37,
-            "minLength": 0,
             "type": "string",
-            "example": "d6e13a43-b1a5-4a83-afca-28437cfaade4"
+            "example": "d6e13a43-b1a5-4a83-afca-28437cfaade4",
+            "maxLength": 37,
+            "minLength": 0
           },
           "resultCode": {
-            "maxLength": 12,
-            "minLength": 0,
             "type": "string",
-            "example": "000381020201"
+            "example": "000381020201",
+            "maxLength": 12,
+            "minLength": 0
           },
           "recreateKey": {
             "$ref": "#/components/schemas/recreateKey"
@@ -2231,16 +2445,16 @@
           "statusMessage": {
             "type": "string",
             "description": "Status message",
-            "example": "ResponseFailure",
             "enum": [
               "ResponseFailure",
               "ResponseTimeout",
               "ResponseSuccess"
-            ]
+            ],
+            "example": "ResponseFailure"
           },
           "pairingPassword": {
             "type": "string",
-            "example": "99999999"
+            "example": 99999999
           }
         }
       },
@@ -2250,12 +2464,12 @@
           "statusMessage": {
             "type": "string",
             "description": "Status message",
-            "example": "ResponseFailure",
             "enum": [
               "ResponseFailure",
               "ResponseTimeout",
               "ResponseSuccess"
-            ]
+            ],
+            "example": "ResponseFailure"
           }
         }
       },
@@ -2265,12 +2479,12 @@
           "statusMessage": {
             "type": "string",
             "description": "Status message",
-            "example": "ResponseFailure",
             "enum": [
               "ResponseFailure",
               "ResponseTimeout",
               "ResponseSuccess"
-            ]
+            ],
+            "example": "ResponseFailure"
           }
         }
       },
@@ -2280,12 +2494,12 @@
           "digitalKeyStatus": {
             "type": "string",
             "description": "Current status of the digital key",
-            "example": "VALID",
             "enum": [
               "VALID",
               "PAUSE",
               "CONSIDER_VALID"
-            ]
+            ],
+            "example": "VALID"
           },
           "friendlyName": {
             "type": "string",
@@ -2300,22 +2514,22 @@
           "digitalKeyStatus": {
             "type": "string",
             "description": "Current status of the digital key",
-            "example": "ResponseFailure",
             "enum": [
               "ResponseFailure",
               "ResponseTimeout",
               "ResponseSuccess"
-            ]
+            ],
+            "example": "ResponseFailure"
           },
           "type": {
             "type": "string",
             "description": "Type of ECU operation, typically indicating the action being performed",
-            "example": "Registration",
             "enum": [
               "Registration",
               "Deletion",
               "VerifierSaltDelivery"
-            ]
+            ],
+            "example": "Registration"
           }
         }
       },
@@ -2323,31 +2537,31 @@
         "type": "object",
         "properties": {
           "vin": {
-            "maxLength": 17,
-            "minLength": 0,
             "type": "string",
             "description": "Incoming vehicle.",
-            "example": "JTHBE1D21E5005002"
+            "example": "JTHBE1D21E5005002",
+            "maxLength": 17,
+            "minLength": 0
           },
           "ecuId": {
-            "maxLength": 32,
-            "minLength": 0,
             "type": "string",
-            "example": "4938205039594"
+            "example": 4938205039594,
+            "maxLength": 32,
+            "minLength": 0
           },
           "keyId": {
-            "maxLength": 128,
-            "minLength": 0,
             "type": "string",
             "description": "Incoming vehicle.",
-            "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
+            "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5",
+            "maxLength": 128,
+            "minLength": 0
           },
           "keyType": {
+            "type": "string",
+            "example": "OWNER",
             "maxLength": 32,
             "minLength": 0,
-            "pattern": "OWNER|SHARED",
-            "type": "string",
-            "example": "OWNER"
+            "pattern": "OWNER|SHARED"
           },
           "ecu": {
             "$ref": "#/components/schemas/EcuDigitalKey"
@@ -2357,68 +2571,135 @@
           }
         }
       },
-      "DigitalKeyResponse": {
+      "KeyStatusResponse": {
         "type": "object",
+        "description": "Response containing key status information",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/Status"
+            "$ref": "#/components/schemas/Status",
+            "description": "Status of the operation"
           },
           "payload": {
-            "$ref": "#/components/schemas/DigitalKeyResponsePayload"
+            "$ref": "#/components/schemas/KeyStatusResponsePayload",
+            "description": "Payload containing key status details"
           }
-        },
-        "description": "Response model containing digital keys information and status."
+        }
+      },
+      "KeyStatusResponsePayload": {
+        "type": "object",
+        "description": "Details of the key status",
+        "properties": {
+          "isCalibrated": {
+            "type": "boolean",
+            "description": "Indicates whether the key is calibrated",
+            "enum": [
+              "true",
+              "false"
+            ],
+            "example": true
+          },
+          "pairingStatus": {
+            "type": "string",
+            "description": "Pairing status of the digital key",
+            "enum": [
+              "PAIRED",
+              "READY",
+              "NOT_READY"
+            ],
+            "example": "PAIRED"
+          },
+          "sharedKeyCount": {
+            "type": "string",
+            "description": "Number of shared keys. This value depends on the number of records in the database that match keyType as 'shared' and ecuType as 'registration'.",
+            "example": 3
+          },
+          "ownerKeyId": {
+            "type": "string",
+            "description": "Indicates OwnerKeyId",
+            "example": "0000000000111111111122222222223333333333"
+          }
+        }
+      },
+      "DigitalKeyInfoDetailsResponse": {
+        "type": "object",
+        "description": "Represents details about the digital key, including key ID, key type, registration date, and friendly name.",
+        "properties": {
+          "keyId": {
+            "type": "string",
+            "description": "Incoming vehicle.",
+            "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
+          },
+          "keyType": {
+            "type": "string",
+            "description": "ID for tracing requests",
+            "enum": [
+              "OWNER",
+              "SHARED"
+            ],
+            "example": "OWNER"
+          },
+          "registeredDate": {
+            "type": "string",
+            "description": "Date registered in the format 'yyyy/MM/dd HH:mm:ss'",
+            "example": "2023/12/13 08:00:00"
+          },
+          "friendlyName": {
+            "type": "string",
+            "description": "A user-friendly name for the device, making it easier to identify.",
+            "example": "Azargani's Phone"
+          },
+          "deviceType": {
+            "type": "string",
+            "description": "Digital Key Device Type",
+            "enum": [
+              "PHONE",
+              "WATCH"
+            ],
+            "example": "PHONE"
+          }
+        }
+      },
+      "DigitalKeyResponse": {
+        "type": "object",
+        "description": "Response model containing digital keys information and status.",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/Status",
+            "description": "Status of the request, including response codes and messages"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/DigitalKeyResponsePayload",
+            "description": "Payload containing a list of digital key information details."
+          }
+        }
       },
       "DigitalKeyResponsePayload": {
         "type": "object",
+        "description": "Payload containing a list of digital key information details.",
         "properties": {
           "digitalKeyInfoList": {
-            "type": "object",
-            "properties": {
-              "keyId": {
-                "type": "string",
-                "description": "Incoming vehicle.",
-                "example": "7c1ce977510a4c4a4f3eb0f8366186783143f2d5"
-              },
-              "keyType": {
-                "type": "string",
-                "description": "ID for tracing requests",
-                "example": "OWNER",
-                "enum": [
-                  "OWNER",
-                  "SHARED"
-                ]
-              },
-              "registeredDate": {
-                "type": "string",
-                "description": "Date registered in the format 'yyyy/MM/dd HH:mm:ss'",
-                "example": "2023/12/13 08:00:00"
-              },
-              "friendlyName": {
-                "type": "string",
-                "description": "A user-friendly name for the device, making it easier to identify.",
-                "example": "Azargani's Phone"
-              }
-            },
-            "description": "Represents details about the digital key, including key ID, key type, registration date, and friendly name."
+            "$ref": "#/components/schemas/DigitalKeyInfoDetailsResponse",
+            "description": "List of digital key information details"
           }
-        },
-        "description": "Payload containing a list of digital key information details."
+        }
       },
       "AuditSummaryResponse": {
         "type": "object",
+        "description": "Response containing audit summary details.",
         "properties": {
           "payload": {
-            "$ref": "#/components/schemas/AuditSummaryResponsePayload"
+            "$ref": "#/components/schemas/AuditSummaryResponsePayload",
+            "description": "The payload containing audit summary details."
           },
           "status": {
-            "$ref": "#/components/schemas/Status"
+            "$ref": "#/components/schemas/Status",
+            "description": "Status of the audit summary request."
           }
-        },
-        "description": "Response containing audit summary details."
+        }
       },
       "AuditSummaryResponseAudit": {
         "type": "object",
+        "description": "Details of an individual audit summary.",
         "properties": {
           "vin": {
             "type": "string",
@@ -2443,7 +2724,9 @@
           "input": {
             "type": "string",
             "description": "Input provided for the audit.",
-            "example": "{\"correlationId\":\"203b89b2-5e43-490f-aec1-f321413cb5a7\"}"
+            "example": {
+              "correlationId": "203b89b2-5e43-490f-aec1-f321413cb5a7"
+            }
           },
           "result": {
             "type": "string",
@@ -2455,11 +2738,11 @@
             "description": "Timestamp of when the audit occurred.",
             "example": "2024-09-27T10:15:30Z"
           }
-        },
-        "description": "Details of an individual audit summary."
+        }
       },
       "AuditSummaryResponsePayload": {
         "type": "object",
+        "description": "Payload containing a list of audit summaries.",
         "properties": {
           "audits": {
             "type": "array",
@@ -2468,67 +2751,25 @@
               "$ref": "#/components/schemas/AuditSummaryResponseAudit"
             }
           }
-        },
-        "description": "Payload containing a list of audit summaries."
-      },
-      "KeyStatusResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "$ref": "#/components/schemas/Status"
-          },
-          "payload": {
-            "$ref": "#/components/schemas/KeyStatusResponsePayload"
-          }
-        },
-        "description": "Response containing key status information"
-      },
-      "KeyStatusResponsePayload": {
-        "type": "object",
-        "properties": {
-          "isCalibrated": {
-            "type": "boolean",
-            "description": "Indicates whether the key is calibrated",
-            "example": true,
-            "enum": [true, false]
-          },
-          "pairingStatus": {
-            "type": "string",
-            "description": "Pairing status of the digital key",
-            "example": "PAIRED",
-            "enum": [
-              "PAIRED",
-              "READY",
-              "NOT_READY"
-            ]
-          },
-          "sharedKeyCount": {
-            "type": "string",
-            "description": "Number of shared keys. This value depends on the number of records in the database that match keyType as 'shared' and ecuType as 'registration'.",
-            "example": "3"
-          },
-          "ownerKeyId": {
-            "type": "string",
-            "description": "Indicates OwnerKeyId",
-            "example": "0000000000111111111122222222223333333333"
-          }
-        },
-        "description": "Details of the key status"
+        }
       },
       "PairingPasswordResponse": {
         "type": "object",
+        "description": "Response containing the pairing password, brand information and its status.",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/Status"
+            "$ref": "#/components/schemas/Status",
+            "description": "Status object containing information about the response status."
           },
           "payload": {
-            "$ref": "#/components/schemas/PairingPasswordResponsePayload"
+            "$ref": "#/components/schemas/PairingPasswordResponsePayload",
+            "description": "Payload object containing the pairing password and brand information."
           }
-        },
-        "description": "Response containing the pairing password, brand information and its status."
+        }
       },
       "PairingPasswordResponsePayload": {
         "type": "object",
+        "description": "Payload containing the pairing password and brand information.",
         "properties": {
           "pairingPassword": {
             "type": "string",
@@ -2550,6 +2791,16 @@
             "description": "The brand ID associated with digital key creation.",
             "example": "0007"
           },
+          "exteriorNfcLocation": {
+            "type": "string",
+            "description": "Location of the exterior NFC reader",
+            "enum": [
+              "PILLAR",
+              "DOOR",
+              "PANEL"
+            ],
+            "example": "PILLAR"
+          },
           "nfcPlacementGraphicsIdentifier": {
             "type": "string",
             "description": "The ID that defines the location of NFC reader.",
@@ -2560,22 +2811,20 @@
             "description": "List of supported radio technologies used by the vehicle.",
             "example": "BT,NFC",
             "items": {
-              "type": "string",
-              "description": "List of supported radio technologies used by the vehicle.",
-              "example": "BT,NFC"
+              "type": "string"
             }
           }
-        },
-        "description": "Payload containing the pairing password and brand information."
+        }
       },
       "DeleteDigitalKeyResponse": {
         "type": "object",
+        "description": "Response model for deleting a digital key",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/Status"
+            "$ref": "#/components/schemas/Status",
+            "description": "Status information, including messages and response code"
           }
-        },
-        "description": "Response model for deleting a digital key"
+        }
       }
     }
   }
